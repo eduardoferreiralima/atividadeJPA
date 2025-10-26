@@ -1,7 +1,7 @@
 package br.com.ifrn.AtividadeJPA.controller;
 
-import br.com.ifrn.AtividadeJPA.model.Livro;
-import br.com.ifrn.AtividadeJPA.repository.LivroRepository;
+import br.com.ifrn.AtividadeJPA.dto.LivroDTO;
+import br.com.ifrn.AtividadeJPA.dto.QuantidadeLivrosCategoriaDTO;
 import br.com.ifrn.AtividadeJPA.services.LivroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +30,11 @@ public class LivroController {
     @GetMapping("/categoria")
     public ResponseEntity<List<LivroDTO>> findByCategoriaNome(@RequestParam String nomeCategoria) {
         return ResponseEntity.ok(livroService.findLivrosByCategoria(nomeCategoria));
+    }
+
+    @GetMapping("/livros_categoria")
+    public ResponseEntity<List<QuantidadeLivrosCategoriaDTO>> findAllLivrosCategoria() {
+        return ResponseEntity.ok(livroService.QuantidadeLivrosCategoria());
     }
 
 

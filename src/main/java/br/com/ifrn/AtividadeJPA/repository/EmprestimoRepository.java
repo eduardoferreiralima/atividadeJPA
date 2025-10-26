@@ -13,7 +13,9 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, Integer>
     @Query("SELECT e FROM Emprestimo e WHERE e.usuario.id = :usuarioId AND e.status = :status")
     List<Emprestimo> findByUsuarioAndStatus(@Param("usuarioId") int usuarioId, @Param("status") StatusEmprestimo status);
 
-    @Query("SELECT e FROM Emprestimo e WHERE e.status = :status AND e.dataDevolucaoPrevista < :dataAtual")
-    List<Emprestimo> findByStatus(@Param("status") StatusEmprestimo status,  @Param("dataAtual") LocalDate dataAtual);
+    @Query("SELECT e FROM Emprestimo e JOIN e.itensEmprestimo i " +
+            "WHERE e.status = :status AND e.dataDevolucaoPrevista < :dataAtual")
+    List<Emprestimo> findEmprestimosAtrasados(@Param("status") StatusEmprestimo status,
+                                              @Param("dataAtual") LocalDate dataAtual);
 
 }

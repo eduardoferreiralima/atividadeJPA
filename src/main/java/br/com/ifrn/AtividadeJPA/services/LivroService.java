@@ -1,11 +1,13 @@
 package br.com.ifrn.AtividadeJPA.services;
 
 
-import br.com.ifrn.AtividadeJPA.controller.LivroDTO;
-import br.com.ifrn.AtividadeJPA.model.Categoria;
-import br.com.ifrn.AtividadeJPA.model.Livro;
+import br.com.ifrn.AtividadeJPA.dto.LivroDTO;
+import br.com.ifrn.AtividadeJPA.dto.QuantidadeLivrosCategoriaDTO;
+import br.com.ifrn.AtividadeJPA.model.*;
+import br.com.ifrn.AtividadeJPA.repository.AutorRepository;
 import br.com.ifrn.AtividadeJPA.repository.CategoriaRepository;
 import br.com.ifrn.AtividadeJPA.repository.LivroRepository;
+import br.com.ifrn.AtividadeJPA.repository.Livro_AutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +22,20 @@ public class LivroService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    public LivroDTO create(LivroDTO dto){
+    @Autowired
+    private AutorRepository autorRepository;
 
+    @Autowired
+    private Livro_AutorRepository livroAutorRepository;
+
+    public LivroDTO create(LivroDTO dto) {
+        // Cria e salva categoria
         Categoria categoria = new Categoria();
         categoria.setNome(dto.getNomeCategoria());
         categoria.setDescricao(dto.getDescricaoCategoria());
         categoriaRepository.save(categoria);
 
-        // Agora cria e associa o livro
+        // Cria e salva livro
         Livro livro = new Livro();
         livro.setTitulo(dto.getTitulo());
         livro.setIsbn(dto.getIsbn());
@@ -36,11 +44,31 @@ public class LivroService {
         livro.setNumeroPaginas(dto.getNumeroPaginas());
         livro.setQuantidadeDisponivel(dto.getQuantidadeDisponivel());
         livro.setQuantidadeTotal(dto.getQuantidadeTotal());
-        livro.setCategoria(categoria); //
+        livro.setCategoria(categoria);
 
-        livroRepository.save(livro);
+        Livro livroSalvo = livroRepository.save(livro);
 
-        return new LivroDTO(livro);
+        // Associa autores corretamente
+        for (Integer autorId : dto.getAutoresIds()) {
+            Autor autor = autorRepository.findById(autorId)
+                    .orElseThrow(() -> new RuntimeException("Autor não encontrado: " + autorId));
+
+            Livro_Autor livroAutor = new Livro_Autor();
+
+            // Cria e seta a chave composta
+            LivroAutorID id = new LivroAutorID();
+            id.setLivroId(livroSalvo.getId());
+            id.setAutorId(autor.getId());
+            livroAutor.setId(id);
+
+            livroAutor.setLivro(livroSalvo);
+            livroAutor.setAutor(autor);
+
+            livroAutorRepository.save(livroAutor);
+        }
+
+        dto.setId(livroSalvo.getId());
+        return dto;
     }
 
 
@@ -58,6 +86,10 @@ public class LivroService {
         return livros.stream()
                 .map(LivroDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public List<QuantidadeLivrosCategoriaDTO> QuantidadeLivrosCategoria(){
+        return livroRepository.contarLivrosPorCategoria();
     }
 
 

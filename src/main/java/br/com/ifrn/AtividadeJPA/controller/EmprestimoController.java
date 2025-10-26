@@ -1,6 +1,8 @@
 package br.com.ifrn.AtividadeJPA.controller;
 
-import br.com.ifrn.AtividadeJPA.model.Emprestimo;
+import br.com.ifrn.AtividadeJPA.dto.EmprestimoDTO;
+import br.com.ifrn.AtividadeJPA.dto.EmprestimosAtrasadosDTO;
+import br.com.ifrn.AtividadeJPA.dto.LivrosEmprestadosDTO;
 import br.com.ifrn.AtividadeJPA.services.EmprestimoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +28,8 @@ public class EmprestimoController {
     }
 
     @GetMapping("/emprestimos_atrasados")
-    public ResponseEntity<List<Emprestimo>> BuscarEmprestimosAtrasados(){
-        return ResponseEntity.ok(emprestimoService.BuscarEmprestimosAtrasados());
+    public ResponseEntity<List<EmprestimosAtrasadosDTO>> BuscarEmprestimosAtrasados(){
+        return ResponseEntity.ok(emprestimoService.listarEmprestimosAtrasados());
     }
 
 

@@ -7,34 +7,22 @@ import java.util.Objects;
 
 @Embeddable
 public class LivroAutorID implements Serializable {
-    private int livroId;
-    private int autorId;
+    private Integer livroId;
+    private Integer autorId;
 
-    public int getLivroId() {
+    public Integer getLivroId() {
         return livroId;
     }
 
-    public void setLivroId(int livroId) {
+    public void setLivroId(Integer livroId) {
         this.livroId = livroId;
     }
 
-    public int getAutorId() {
+    public Integer getAutorId() {
         return autorId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        LivroAutorID that = (LivroAutorID) o;
-        return livroId == that.livroId && autorId == that.autorId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(livroId, autorId);
-    }
-
-    public void setAutorId(int autorId) {
+    public void setAutorId(Integer autorId) {
         this.autorId = autorId;
     }
 }

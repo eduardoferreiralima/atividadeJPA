@@ -1,4 +1,4 @@
-package br.com.ifrn.AtividadeJPA.controller;
+package br.com.ifrn.AtividadeJPA.dto;
 
 import java.time.LocalDate;
 

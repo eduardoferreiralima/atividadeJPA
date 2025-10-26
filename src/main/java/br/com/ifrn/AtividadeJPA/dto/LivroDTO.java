@@ -1,8 +1,9 @@
-package br.com.ifrn.AtividadeJPA.controller;
+package br.com.ifrn.AtividadeJPA.dto;
 
 import br.com.ifrn.AtividadeJPA.model.Livro;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class LivroDTO {
     private int id;
@@ -15,6 +16,16 @@ public class LivroDTO {
     private int quantidadeDisponivel;
     private String nomeCategoria;
     private String descricaoCategoria;
+
+    private List<Integer> autoresIds;
+
+    public List<Integer> getAutoresIds() {
+        return autoresIds;
+    }
+
+    public void setAutoresIds(List<Integer> autoresIds) {
+        this.autoresIds = autoresIds;
+    }
 
     public LivroDTO() {}
 

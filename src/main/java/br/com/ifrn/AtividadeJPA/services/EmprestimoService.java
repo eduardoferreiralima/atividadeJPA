@@ -1,20 +1,18 @@
 package br.com.ifrn.AtividadeJPA.services;
 
 
-import br.com.ifrn.AtividadeJPA.controller.EmprestimoDTO;
-import br.com.ifrn.AtividadeJPA.controller.LivroDTO;
-import br.com.ifrn.AtividadeJPA.controller.LivrosEmprestadosDTO;
+import br.com.ifrn.AtividadeJPA.dto.EmprestimoDTO;
+import br.com.ifrn.AtividadeJPA.dto.EmprestimosAtrasadosDTO;
+import br.com.ifrn.AtividadeJPA.dto.LivroDTO;
+import br.com.ifrn.AtividadeJPA.dto.LivrosEmprestadosDTO;
 import br.com.ifrn.AtividadeJPA.model.*;
 import br.com.ifrn.AtividadeJPA.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -126,9 +124,26 @@ public class EmprestimoService {
         return emprestimoRepository.findAll();
     }
 
-    public List<Emprestimo> BuscarEmprestimosAtrasados() {
-        List<Emprestimo> emprestimos = emprestimoRepository.findByStatus(StatusEmprestimo.ATIVO, LocalDate.now());
-        return emprestimos;
+    public List<EmprestimosAtrasadosDTO> listarEmprestimosAtrasados() {
+        List<EmprestimosAtrasadosDTO> atrasados = new ArrayList<>();
+        LocalDate hoje = LocalDate.now();
+
+        List<Emprestimo> emprestimos = emprestimoRepository.findEmprestimosAtrasados(StatusEmprestimo.ATIVO, hoje);
+
+        for (Emprestimo e : emprestimos) {
+            for (Item_Emprestimo item : e.getItensEmprestimo()) {
+                EmprestimosAtrasadosDTO dto = new EmprestimosAtrasadosDTO();
+                dto.setEmprestimoId(e.getId());
+                dto.setUsuarioNome(e.getUsuario().getNome());
+                dto.setLivroTitulo(item.getLivro().getTitulo());
+                dto.setDataDevolucaoPrevista(e.getDataDevolucaoPrevista());
+                dto.setDataEmprestimo(e.getDataEmprestimo());
+                atrasados.add(dto);
+            }
+        }
+
+        return atrasados;
     }
+
 
 }
